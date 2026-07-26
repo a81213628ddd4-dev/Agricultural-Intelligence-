@@ -50,14 +50,14 @@ st.markdown("""
     /* Buttons */
     .stButton > button {
         background-color: #2e7d32;
-        color: white;
+        color: yellow;
         border-radius: 8px;
         font-weight: 600;
         border: none;
     }
     .stButton > button:hover {
         background-color: #1b5e20;
-        color: white;
+        color: yellow;
     }
 </style>
 """, unsafe_allow_html=True)
