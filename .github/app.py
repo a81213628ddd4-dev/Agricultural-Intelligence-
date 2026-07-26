@@ -7,18 +7,46 @@ import requests
 import plotly.express as px
 from PIL import Image
 
+# ====================== PAGE CONFIG ======================
 st.set_page_config(
     page_title="Farm Intelligence System",
     page_icon="🌾",
     layout="wide"
 )
 
+# ====================== CUSTOM CSS ======================
+st.markdown("""
+<style>
+    .stApp {
+        background: linear-gradient(135deg, #f5f7fa 0%, #e8f5e9 100%);
+    }
+    h1 {
+        color: #1b5e20 !important;
+        text-align: center;
+    }
+    section[data-testid="stSidebar"] {
+        background-color: #e8f5e9;
+        border-right: 2px solid #a5d6a7;
+    }
+    .stButton > button {
+        background-color: #2e7d32;
+        color: white;
+        border-radius: 8px;
+        font-weight: 600;
+        border: none;
+    }
+    .stButton > button:hover {
+        background-color: #1b5e20;
+        color: white;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# ====================== TITLE ======================
 st.title("🌾 Farm Intelligence System")
 st.caption("AI Agronomist – Crop Recommendation + Smart Irrigation + Fertilizer + Government Schemes")
 
-# ============================================================
-# DATA
-# ============================================================
+# ====================== DATA ======================
 STATE_COORDS = {
     "Punjab": (30.9, 75.8), "Haryana": (29.0, 76.1), "Uttar Pradesh": (26.8, 80.9),
     "Rajasthan": (26.9, 75.8), "Madhya Pradesh": (23.3, 77.4), "Maharashtra": (19.8, 75.7),
@@ -59,46 +87,41 @@ BASE_IRRIGATION = {
     "Soybean": [(25, "Flowering"), (45, "Pod filling")]
 }
 
-# ====================== GOVERNMENT SCHEMES ======================
 CENTRAL_SCHEMES = {
-    "NFSM": "National Food Security Mission – Seeds, demonstrations, farm machinery, micronutrients (Cereals, Pulses, Cotton, Jute, Sugarcane)",
-    "NMEO-OS": "National Mission on Edible Oils – Oilseeds (Groundnut, Mustard, Soybean, Sunflower, Sesame etc.)",
-    "NMEO-OP": "National Mission on Edible Oils – Oil Palm",
-    "MIDH": "Mission for Integrated Development of Horticulture (Fruits, Vegetables, Spices, Flowers, Plantation crops)",
-    "PMFBY": "Pradhan Mantri Fasal Bima Yojana – Crop Insurance against yield loss",
-    "PM-AASHA / PSS": "Price Support Scheme + MSP / FRP procurement",
-    "RKVY-RAFTAAR": "Rashtriya Krishi Vikas Yojana – Flexible funding for state priorities",
-    "PMKSY": "Pradhan Mantri Krishi Sinchayee Yojana – Micro-irrigation & water harvesting",
-    "SMAM": "Sub-Mission on Agricultural Mechanisation – Subsidies on tractors, seed drills, harvesters, drones",
-    "PKVY": "Paramparagat Krishi Vikas Yojana – Organic farming clusters",
-    "AIF": "Agriculture Infrastructure Fund – Concessional loans for warehouses, cold storages, processing",
-    "PM-KISAN": "₹6,000 per year direct income support to farmers",
-    "KCC": "Kisan Credit Card – Easy and subsidised crop loans",
-    "Soil Health Card": "Free soil testing and balanced fertiliser recommendations"
+    "NFSM": "National Food Security Mission – Seeds, demonstrations, machinery, micronutrients",
+    "NMEO-OS": "National Mission on Edible Oils – Oilseeds (Groundnut, Mustard, Soybean etc.)",
+    "MIDH": "Mission for Integrated Development of Horticulture (Fruits, Vegetables, Spices)",
+    "PMFBY": "Pradhan Mantri Fasal Bima Yojana – Crop Insurance",
+    "PM-AASHA": "Price Support Scheme + MSP / FRP procurement",
+    "PMKSY": "Pradhan Mantri Krishi Sinchayee Yojana – Micro-irrigation",
+    "SMAM": "Sub-Mission on Agricultural Mechanisation – Machinery & drone subsidies",
+    "PKVY": "Paramparagat Krishi Vikas Yojana – Organic farming",
+    "AIF": "Agriculture Infrastructure Fund – Warehouses & cold storage loans",
+    "PM-KISAN": "₹6,000 per year direct income support",
+    "KCC": "Kisan Credit Card – Subsidised crop loans",
+    "Soil Health Card": "Free soil testing and fertiliser recommendations"
 }
 
 STATE_SCHEMES = {
-    "Punjab": ["Heavy focus on Wheat & Paddy MSP procurement", "Crop diversification incentives", "Mechanisation support"],
-    "Haryana": ["Wheat & Paddy MSP procurement", "Crop diversification schemes", "Micro-irrigation subsidy"],
-    "Uttar Pradesh": ["Sugarcane FRP + state bonuses", "Wheat & Rice procurement", "Potato & vegetable schemes", "Pulses & oilseeds under NFSM/NMEO"],
-    "Rajasthan": ["Strong NMEO-OS support for Mustard & Groundnut", "Interest-free crop loans", "Organic farming promotion", "Seed subsidies"],
-    "Maharashtra": ["Sugarcane FRP + state incentives", "Cotton & Soybean support", "Horticulture (Grapes, Pomegranate, Onion) under MIDH"],
-    "Gujarat": ["Strong MSP/PSS for Groundnut", "State seed & input subsidies", "Mechanisation & solar fencing support", "Cotton support"],
-    "Madhya Pradesh": ["Strong Soybean & Pulses support under NMEO/NFSM", "Wheat programmes", "Horticulture expansion"],
-    "Karnataka": ["Seed distribution under subsidy", "NMEO-OS & NFSM", "Coffee & plantation support", "Ragi & Maize focus"],
-    "Tamil Nadu": ["Groundnut seed & bio-input subsidies", "Horticulture packages under MIDH", "Oilseed programmes"],
-    "Andhra Pradesh": ["Groundnut seed subsidy (often \~40%)", "Free/subsidised power", "Drone & mechanisation subsidies", "Chillies & horticulture"],
-    "Telangana": ["Groundnut & Cotton support", "Free power", "Drone & mechanisation subsidies"],
-    "West Bengal": ["Rice & Jute support", "Potato schemes", "Tea & horticulture under MIDH"],
-    "Kerala": ["Special packages for Rubber, Coconut, Spices, Tea, Coffee", "MIDH support"],
-    "Assam": ["Higher Central share", "Tea, Jute, Rice, Spices, Oil Palm support"],
-    "Himachal Pradesh": ["Apple & temperate fruits under MIDH", "Organic & medicinal plants support", "Higher Central funding"],
-    "Other": ["Central schemes + local seed subsidy programmes as per state priority"]
+    "Punjab": ["Heavy MSP for Wheat & Paddy", "Crop diversification incentives", "Mechanisation support"],
+    "Haryana": ["Wheat & Paddy MSP", "Crop diversification schemes"],
+    "Uttar Pradesh": ["Sugarcane FRP + bonuses", "Wheat & Rice procurement", "Potato schemes"],
+    "Rajasthan": ["Strong support for Mustard & Groundnut", "Interest-free crop loans", "Organic promotion"],
+    "Maharashtra": ["Sugarcane incentives", "Cotton & Soybean support", "Horticulture under MIDH"],
+    "Gujarat": ["Groundnut MSP focus", "Seed & input subsidies", "Solar fencing support"],
+    "Madhya Pradesh": ["Soybean & Pulses support", "Wheat programmes", "Horticulture expansion"],
+    "Karnataka": ["Seed subsidies", "Ragi & Maize focus", "Coffee support"],
+    "Tamil Nadu": ["Groundnut & bio-input subsidies", "Horticulture packages"],
+    "Andhra Pradesh": ["Groundnut seed subsidy", "Free/subsidised power", "Drone subsidies"],
+    "Telangana": ["Cotton & Groundnut support", "Free power", "Drone subsidies"],
+    "West Bengal": ["Rice & Jute support", "Potato schemes", "Tea & horticulture"],
+    "Kerala": ["Special packages for Rubber, Coconut, Spices, Tea, Coffee"],
+    "Assam": ["Higher Central share", "Tea, Jute, Rice, Spices support"],
+    "Himachal Pradesh": ["Apple & temperate fruits under MIDH", "Organic support"],
+    "Other": ["Central schemes + local seed subsidy programmes"]
 }
 
-# ============================================================
-# FUNCTIONS
-# ============================================================
+# ====================== FUNCTIONS ======================
 @st.cache_data(ttl=3600)
 def get_weather(lat, lon, days=14):
     url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&daily=precipitation_sum,temperature_2m_max&timezone=Asia/Kolkata&forecast_days={days}"
@@ -154,9 +177,7 @@ def recommend_crop(N, P, K, ph, temp, state):
     best = max(scores, key=scores.get)
     return best, scores[best]
 
-# ============================================================
-# SIDEBAR
-# ============================================================
+# ====================== SIDEBAR ======================
 st.sidebar.header("Farm Data Input")
 
 state = st.sidebar.selectbox("Select State", list(STATE_COORDS.keys()))
@@ -171,20 +192,18 @@ uploaded_file = st.sidebar.file_uploader("Upload Soil Report / Field Photo", typ
 
 run_btn = st.sidebar.button("Get AI Recommendation", type="primary")
 
-# ============================================================
-# MAIN PAGE
-# ============================================================
+# ====================== MAIN CONTENT ======================
 if run_btn:
     crop, conf = recommend_crop(N, P, K, ph, temp, state)
 
     st.success(f"**Recommended Crop: {crop}**   |   Confidence: **{conf}%**")
 
-    c1, c2, c3 = st.columns(3)
-    c1.metric("Water Need", CROP_REQUIREMENTS[crop]["water"])
-    c2.metric("Duration", CROP_REQUIREMENTS[crop]["duration"])
-    c3.metric("Field Size", f"{size} acres")
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Water Need", CROP_REQUIREMENTS[crop]["water"])
+    col2.metric("Duration", CROP_REQUIREMENTS[crop]["duration"])
+    col3.metric("Field Size", f"{size} acres")
 
-    # ----- Fertilizer -----
+    # Fertilizer
     st.subheader("Fertilizer Recommendation (ICAR Standard)")
     std = STANDARD_NPK.get(crop, STANDARD_NPK["Default"])
     need_N = max(0, std[0] - N)
@@ -192,18 +211,16 @@ if run_btn:
     need_K = max(0, std[2] - K)
 
     st.write(f"**Standard dose for {crop}:** N = {std[0]} | P₂O₅ = {std[1]} | K₂O = {std[2]} kg/ha")
-    st.write(f"**You still need to apply:**")
-    st.markdown(f"- **Nitrogen**: {need_N:.0f} kg/ha → Urea ≈ **{need_N*2.17:.0f} kg/ha** (split doses)")
-    st.markdown(f"- **Phosphorus**: {need_P:.0f} kg/ha")
-    st.markdown(f"- **Potassium**: {need_K:.0f} kg/ha")
+    st.markdown(f"- **Nitrogen still needed:** {need_N:.0f} kg/ha → Urea ≈ **{need_N * 2.17:.0f} kg/ha**")
+    st.markdown(f"- **Phosphorus still needed:** {need_P:.0f} kg/ha")
+    st.markdown(f"- **Potassium still needed:** {need_K:.0f} kg/ha")
 
-    # ----- Weather + Irrigation -----
+    # Weather + Irrigation
     lat, lon = STATE_COORDS[state]
     weather = get_weather(lat, lon)
 
     st.subheader("Live Weather & Smart Irrigation")
-    fig = px.bar(weather, x="date", y="precip_mm", title="14-Day Rainfall Forecast (mm)",
-                 labels={"precip_mm": "Rainfall (mm)", "date": "Date"})
+    fig = px.bar(weather, x="date", y="precip_mm", title="14-Day Rainfall Forecast (mm)")
     st.plotly_chart(fig, use_container_width=True)
 
     base = BASE_IRRIGATION.get(crop, [(20, "First irrigation"), (45, "Second irrigation"), (70, "Third irrigation")])
@@ -212,20 +229,21 @@ if run_btn:
     st.write("**Smart Irrigation Schedule** (automatically delayed if rain is expected)")
     st.dataframe(pd.DataFrame(adjusted), use_container_width=True)
 
-    # ----- GOVERNMENT SCHEMES SECTION -----
+    # Government Schemes
     st.subheader("Government Schemes You Can Avail")
 
-    with st.expander("Central Government Schemes (Applicable across India)", expanded=True):
+    with st.expander("Central Government Schemes (All India)", expanded=True):
         for name, desc in CENTRAL_SCHEMES.items():
-            st.markdown(f"**{name}**  
-{desc}")
+            st.markdown(f"**{name}**")
+            st.write(desc)
+            st.write("")
 
     with st.expander(f"State-specific Schemes – {state}", expanded=True):
         schemes = STATE_SCHEMES.get(state, STATE_SCHEMES["Other"])
         for s in schemes:
             st.markdown(f"- {s}")
 
-    st.info("Note: Always check the latest guidelines on the official websites of Ministry of Agriculture & Farmers Welfare and your State Agriculture Department.")
+    st.info("Always verify the latest guidelines on the official Ministry of Agriculture website and your State Agriculture Department.")
 
     # Show uploaded image
     if uploaded_file is not None and uploaded_file.type.startswith("image"):
@@ -233,12 +251,12 @@ if run_btn:
         st.image(Image.open(uploaded_file), width=400)
 
 else:
-    st.info("← Fill the farm details in the **sidebar** and click **Get AI Recommendation**")
+    st.info("← Fill the details in the sidebar and click **Get AI Recommendation**")
     st.markdown("""
-    ### What this app gives you:
+    ### Features of this system:
     - Best crop recommendation for your soil & location
-    - Exact fertiliser quantity still needed
+    - Exact fertiliser quantity still needed (ICAR based)
     - Live weather + auto-adjusted irrigation dates
     - Central & State government schemes
-    - Support for soil report / field photo upload
+    - Upload soil report or field photo
     """)
