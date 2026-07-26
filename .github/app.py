@@ -17,17 +17,37 @@ st.set_page_config(
 # ====================== CUSTOM CSS ======================
 st.markdown("""
 <style>
+    /* Background */
     .stApp {
         background: linear-gradient(135deg, #f5f7fa 0%, #e8f5e9 100%);
     }
+
+    /* Main Title */
     h1 {
         color: #1b5e20 !important;
         text-align: center;
     }
+
+    /* Sidebar background */
     section[data-testid="stSidebar"] {
         background-color: #e8f5e9;
         border-right: 2px solid #a5d6a7;
     }
+
+    /* ===== TEXT COLOUR OF LABELS (Select State, Nitrogen, etc.) ===== */
+    section[data-testid="stSidebar"] label {
+        color: #1b5e20 !important;          /* Dark green colour */
+        font-weight: 600 !important;
+        font-size: 15px !important;
+    }
+
+    /* Input boxes text */
+    section[data-testid="stSidebar"] input, 
+    section[data-testid="stSidebar"] select {
+        color: #000000 !important;
+    }
+
+    /* Buttons */
     .stButton > button {
         background-color: #2e7d32;
         color: white;
