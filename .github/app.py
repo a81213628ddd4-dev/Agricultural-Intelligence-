@@ -45,7 +45,7 @@ st.markdown("""
     /* Sidebar input text */
     section[data-testid="stSidebar"] input,
     section[data-testid="stSidebar"] div[data-baseweb="select"] {
-        color: #000000 !important;
+        color: #1b5e20 !important;
         font-weight: 600 !important;
     }
 
