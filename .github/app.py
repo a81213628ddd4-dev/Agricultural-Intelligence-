@@ -19,49 +19,86 @@ st.markdown("""
 <style>
     /* Background */
     .stApp {
-        background: linear-gradient(135deg, #f5f7fa 0%, #e8f5e9 100%);
+        background-color: #f0f7f0 !important;
     }
 
     /* Main Title */
     h1 {
         color: #1b5e20 !important;
         text-align: center;
+        font-weight: 700 !important;
     }
 
     /* Sidebar background */
     section[data-testid="stSidebar"] {
-        background-color: #e8f5e9;
-        border-right: 2px solid #a5d6a7;
+        background-color: #e8f5e9 !important;
+        border-right: 3px solid #2e7d32;
     }
 
-    /* ===== TEXT COLOUR OF LABELS (Select State, Nitrogen, etc.) ===== */
+    /* ===== SIDEBAR LABELS (Select State, Nitrogen, etc.) ===== */
     section[data-testid="stSidebar"] label {
-        color: #1b5e20 !important;          /* Dark green colour */
-        font-weight: 600 !important;
+        color: #1b5e20 !important;
+        font-weight: 700 !important;
         font-size: 15px !important;
     }
 
-    /* Input boxes text */
-    section[data-testid="stSidebar"] input, 
-    section[data-testid="stSidebar"] select {
+    /* Sidebar input text */
+    section[data-testid="stSidebar"] input,
+    section[data-testid="stSidebar"] div[data-baseweb="select"] {
         color: #000000 !important;
+        font-weight: 600 !important;
+    }
+
+    /* ===== MAIN CONTENT TEXT (Results) ===== */
+    .stMarkdown, .stMarkdown p, .stMarkdown li, 
+    div[data-testid="stMarkdownContainer"] p,
+    div[data-testid="stMarkdownContainer"] {
+        color: #1a1a1a !important;
+        font-size: 16px !important;
+    }
+
+    /* Subheaders */
+    h2, h3 {
+        color: #1b5e20 !important;
+        font-weight: 700 !important;
+    }
+
+    /* Success box text */
+    .stSuccess {
+        background-color: #c8e6c9 !important;
+        color: #1b5e20 !important;
+        font-weight: 600 !important;
+    }
+
+    /* Metrics */
+    [data-testid="stMetricValue"] {
+        color: #1b5e20 !important;
+        font-weight: 700 !important;
+    }
+    [data-testid="stMetricLabel"] {
+        color: #333333 !important;
     }
 
     /* Buttons */
     .stButton > button {
-        background-color: #2e7d32;
-        color: yellow;
-        border-radius: 8px;
-        font-weight: 600;
-        border: none;
+        background-color: #2e7d32 !important;
+        color: white !important;
+        border-radius: 8px !important;
+        font-weight: 700 !important;
+        border: none !important;
     }
     .stButton > button:hover {
-        background-color: #1b5e20;
-        color: yellow;
+        background-color: #1b5e20 !important;
+        color: white !important;
+    }
+
+    /* Expander headers */
+    .streamlit-expanderHeader {
+        color: #1b5e20 !important;
+        font-weight: 700 !important;
     }
 </style>
 """, unsafe_allow_html=True)
-
 # ====================== TITLE ======================
 st.title("🌾 Farm Intelligence System")
 st.caption("AI Agronomist – Crop Recommendation + Smart Irrigation + Fertilizer + Government Schemes")
